@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../features/core/utils/base_bloc.dart';
 
 // Premium Features Events
-abstract class PremiumEvent extends BaseEvent {}
+abstract class PremiumEvent extends BaseEvent {
+  const PremiumEvent();
+}
 
 class CheckPremiumStatus extends PremiumEvent {
   final String userId;
 
-  CheckPremiumStatus({required this.userId});
+  const CheckPremiumStatus({required this.userId});
 
   @override
   List<Object> get props => [userId];
@@ -19,7 +21,7 @@ class PurchasePremium extends PremiumEvent {
   final String planId;
   final String paymentMethod;
 
-  PurchasePremium({
+  const PurchasePremium({
     required this.userId,
     required this.planId,
     required this.paymentMethod,
@@ -32,18 +34,24 @@ class PurchasePremium extends PremiumEvent {
 class RestorePurchases extends PremiumEvent {
   final String userId;
 
-  RestorePurchases({required this.userId});
+  const RestorePurchases({required this.userId});
 
   @override
   List<Object> get props => [userId];
 }
 
 // Premium Features States
-abstract class PremiumState extends BaseState {}
+abstract class PremiumState extends BaseState {
+  const PremiumState();
+}
 
-class PremiumInitial extends PremiumState {}
+class PremiumInitial extends PremiumState {
+  const PremiumInitial();
+}
 
-class PremiumLoading extends PremiumState {}
+class PremiumLoading extends PremiumState {
+  const PremiumLoading();
+}
 
 class PremiumStatusChecked extends PremiumState {
   final bool isPremium;
@@ -158,7 +166,7 @@ class PremiumBloc extends BaseBloc<PremiumEvent, PremiumState> {
   // final PremiumRepository premiumRepository;
   // final PaymentService paymentService;
 
-  PremiumBloc() : super(PremiumInitial()) {
+  PremiumBloc() : super(const PremiumInitial()) {
     on<CheckPremiumStatus>(_onCheckPremiumStatus);
     on<PurchasePremium>(_onPurchasePremium);
     on<RestorePurchases>(_onRestorePurchases);

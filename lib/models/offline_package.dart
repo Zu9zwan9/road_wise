@@ -1,10 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 
 part 'offline_package.g.dart';
 
 @collection
-class OfflinePackage extends Equatable {
+class OfflinePackage {
   Id id = Isar.autoIncrement;
 
   @Index(unique: true)
@@ -13,8 +12,8 @@ class OfflinePackage extends Equatable {
   final String? userId;
   final String? title;
   final String? description;
-  final List<String> lessonIds;
-  final DateTime downloadDate;
+  final List<String>? lessonIds;
+  final DateTime? downloadDate;
   final int sizeInKb;
   final bool isDownloaded;
   final double downloadProgress;
@@ -36,46 +35,35 @@ class OfflinePackage extends Equatable {
        downloadDate = downloadDate ?? DateTime.now();
 
   @override
-  List<Object?> get props => [
-    id,
-    serial,
-    userId,
-    title,
-    description,
-    lessonIds,
-    downloadDate,
-    sizeInKb,
-    isDownloaded,
-    downloadProgress,
-    expiryDate,
-  ];
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is OfflinePackage &&
+        other.id == id &&
+        other.serial == serial &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.lessonIds == lessonIds &&
+        other.downloadDate == downloadDate &&
+        other.sizeInKb == sizeInKb &&
+        other.isDownloaded == isDownloaded &&
+        other.downloadProgress == downloadProgress &&
+        other.expiryDate == expiryDate;
+  }
 
-  OfflinePackage copyWith({
-    Id? id,
-    String? serial,
-    String? userId,
-    String? title,
-    String? description,
-    List<String>? lessonIds,
-    DateTime? downloadDate,
-    int? sizeInKb,
-    bool? isDownloaded,
-    double? downloadProgress,
-    DateTime? expiryDate,
-  }) {
-    return OfflinePackage(
-      id: id ?? this.id,
-      serial: serial ?? this.serial,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      lessonIds: lessonIds ?? this.lessonIds,
-      downloadDate: downloadDate ?? this.downloadDate,
-      sizeInKb: sizeInKb ?? this.sizeInKb,
-      isDownloaded: isDownloaded ?? this.isDownloaded,
-      downloadProgress: downloadProgress ?? this.downloadProgress,
-      expiryDate: expiryDate ?? this.expiryDate,
-    );
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        serial.hashCode ^
+        userId.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        lessonIds.hashCode ^
+        downloadDate.hashCode ^
+        sizeInKb.hashCode ^
+        isDownloaded.hashCode ^
+        downloadProgress.hashCode ^
+        expiryDate.hashCode;
   }
 
   // Update download progress
@@ -111,9 +99,37 @@ class OfflinePackage extends Equatable {
 
   // Get formatted download date
   String get formattedDownloadDate {
-    return '${downloadDate.day}/${downloadDate.month}/${downloadDate.year}';
+    return '${downloadDate!.day}/${downloadDate!.month}/${downloadDate!.year}';
   }
 
   // Get number of lessons in package
-  int get lessonCount => lessonIds.length;
+  int get lessonCount => lessonIds!.length;
+
+  OfflinePackage copyWith({
+    Id? id,
+    String? serial,
+    String? userId,
+    String? title,
+    String? description,
+    List<String>? lessonIds,
+    DateTime? downloadDate,
+    int? sizeInKb,
+    bool? isDownloaded,
+    double? downloadProgress,
+    DateTime? expiryDate,
+  }) {
+    return OfflinePackage(
+      id: id ?? this.id,
+      serial: serial ?? this.serial,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      lessonIds: lessonIds ?? this.lessonIds,
+      downloadDate: downloadDate ?? this.downloadDate,
+      sizeInKb: sizeInKb ?? this.sizeInKb,
+      isDownloaded: isDownloaded ?? this.isDownloaded,
+      downloadProgress: downloadProgress ?? this.downloadProgress,
+      expiryDate: expiryDate ?? this.expiryDate,
+    );
+  }
 }

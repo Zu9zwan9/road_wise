@@ -2,9 +2,9 @@ import 'package:isar/isar.dart';
 
 part 'user.g.dart';
 
-@collection
+@Collection()
 class User {
-  final Id id;
+  Id id = Isar.autoIncrement;
 
   @Index(unique: true)
   final String? uid; // Renamed from 'id' to 'uid' to avoid confusion
@@ -22,7 +22,7 @@ class User {
   final List<String> badges;
   final List<String> unlockedAchievements;
 
-  const User({
+  User({
     this.id = Isar.autoIncrement,
     this.uid,
     this.email,
@@ -39,22 +39,43 @@ class User {
     this.unlockedAchievements = const [],
   });
 
-  List<Object?> get props => [
-    id,
-    uid,
-    email,
-    name,
-    photoUrl,
-    xp,
-    currentStreak,
-    longestStreak,
-    hearts,
-    lastActive,
-    isPremium,
-    completedLessons,
-    badges,
-    unlockedAchievements,
-  ];
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is User &&
+        other.id == id &&
+        other.uid == uid &&
+        other.email == email &&
+        other.name == name &&
+        other.photoUrl == photoUrl &&
+        other.xp == xp &&
+        other.currentStreak == currentStreak &&
+        other.longestStreak == longestStreak &&
+        other.hearts == hearts &&
+        other.lastActive == lastActive &&
+        other.isPremium == isPremium &&
+        other.completedLessons == completedLessons &&
+        other.badges == badges &&
+        other.unlockedAchievements == unlockedAchievements;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        uid.hashCode ^
+        email.hashCode ^
+        name.hashCode ^
+        photoUrl.hashCode ^
+        xp.hashCode ^
+        currentStreak.hashCode ^
+        longestStreak.hashCode ^
+        hearts.hashCode ^
+        lastActive.hashCode ^
+        isPremium.hashCode ^
+        completedLessons.hashCode ^
+        badges.hashCode ^
+        unlockedAchievements.hashCode;
+  }
 
   User copyWith({
     Id? id,

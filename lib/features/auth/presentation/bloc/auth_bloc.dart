@@ -1,138 +1,34 @@
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../../models/user.dart';
-import '../../domain/repositories/auth_repository.dart';
+part 'auth_event.dart';
+part 'auth_state.dart';
 
-// Events
-abstract class AuthEvent extends Equatable {
-  const AuthEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class CheckAuthStatus extends AuthEvent {}
-
-class SignInRequested extends AuthEvent {
-  final String email;
-  final String password;
-
-  const SignInRequested({required this.email, required this.password});
-
-  @override
-  List<Object> get props => [email, password];
-}
-
-class SignUpRequested extends AuthEvent {
-  final String email;
-  final String password;
-  final String name;
-
-  const SignUpRequested({
-    required this.email,
-    required this.password,
-    required this.name,
-  });
-
-  @override
-  List<Object> get props => [email, password, name];
-}
-
-class SignOutRequested extends AuthEvent {}
-
-class ForgotPasswordRequested extends AuthEvent {
-  final String email;
-
-  const ForgotPasswordRequested({required this.email});
-
-  @override
-  List<Object> get props => [email];
-}
-
-class ProvinceSelected extends AuthEvent {
-  final String province;
-
-  const ProvinceSelected({required this.province});
-
-  @override
-  List<Object> get props => [province];
-}
-
-// States
-abstract class AuthState extends Equatable {
-  const AuthState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class AuthInitial extends AuthState {}
-
-class AuthLoading extends AuthState {}
-
-class Authenticated extends AuthState {
-  final User user;
-
-  const Authenticated({required this.user});
-
-  @override
-  List<Object> get props => [user];
-}
-
-class ProvinceSelectionRequired extends AuthState {
-  final User user;
-
-  const ProvinceSelectionRequired({required this.user});
-
-  @override
-  List<Object> get props => [user];
-}
-
-class Unauthenticated extends AuthState {}
-
-class AuthError extends AuthState {
-  final String message;
-
-  const AuthError({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
-
-class ForgotPasswordSent extends AuthState {}
-
-// BLoC
+// Auth Bloc
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepository authRepository;
+  // Add your auth repository here if needed
+  // final AuthRepository authRepository;
 
-  AuthBloc({required this.authRepository}) : super(AuthInitial()) {
-    on<CheckAuthStatus>(_onCheckAuthStatus);
+  AuthBloc() : super(const AuthInitial()) {
+    on<AuthCheckRequested>(_onAuthCheckRequested);
     on<SignInRequested>(_onSignInRequested);
     on<SignUpRequested>(_onSignUpRequested);
     on<SignOutRequested>(_onSignOutRequested);
-    on<ForgotPasswordRequested>(_onForgotPasswordRequested);
-    on<ProvinceSelected>(_onProvinceSelected);
+    on<SocialLoginRequested>(_onSocialLoginRequested);
   }
 
-  Future<void> _onCheckAuthStatus(
-    CheckAuthStatus event,
+  Future<void> _onAuthCheckRequested(
+    AuthCheckRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
-      final user = await authRepository.getCurrentUser();
-      if (user != null) {
-        // Check if province is selected
-        final province = await authRepository.getUserProvince(user.uid!);
-        if (province != null && province.isNotEmpty) {
-          emit(Authenticated(user: user));
-        } else {
-          emit(ProvinceSelectionRequired(user: user));
-        }
-      } else {
-        emit(Unauthenticated());
-      }
+      // Check if user is logged in
+      // Replace with your authentication logic
+      // For now, we'll simulate an unauthenticated state
+      await Future.delayed(const Duration(seconds: 1));
+      emit(const Unauthenticated());
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
@@ -142,20 +38,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignInRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
-      final user = await authRepository.signIn(
-        email: event.email,
-        password: event.password,
-      );
+      // Sign in logic
+      // Replace with your authentication logic
+      await Future.delayed(const Duration(seconds: 1));
 
-      // Check if province is selected
-      final province = await authRepository.getUserProvince(user.uid!);
-      if (province != null && province.isNotEmpty) {
-        emit(Authenticated(user: user));
-      } else {
-        emit(ProvinceSelectionRequired(user: user));
-      }
+      // Simulate successful login
+      const String userId = "user_123";
+      emit(
+        const Authenticated(
+          userId: userId,
+          userName: "Test User",
+          userEmail: "test@example.com",
+        ),
+      );
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
@@ -165,14 +62,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
-      final user = await authRepository.signUp(
-        email: event.email,
-        password: event.password,
-        name: event.name,
-      );
-      emit(ProvinceSelectionRequired(user: user));
+      // Sign up logic
+      // Replace with your authentication logic
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Simulate successful registration and province selection required
+      const String userId = "new_user_123";
+      emit(ProvinceSelectionRequired(userId: userId));
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
@@ -182,44 +80,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
-      await authRepository.signOut();
-      emit(Unauthenticated());
+      // Sign out logic
+      // Replace with your authentication logic
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(const Unauthenticated());
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
   }
 
-  Future<void> _onForgotPasswordRequested(
-    ForgotPasswordRequested event,
+  Future<void> _onSocialLoginRequested(
+    SocialLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
     try {
-      await authRepository.sendPasswordResetEmail(event.email);
-      emit(ForgotPasswordSent());
+      // Implement social login logic (e.g., Google, Facebook)
+      // For now, simulate a successful login or error
+      // This is a placeholder, replace with actual social login implementation
+      await Future.delayed(const Duration(seconds: 1));
+      // Example: final UserCredential userCredential = await _signInWithGoogle();
+      // if (userCredential.user != null) {
+      //   emit(Authenticated(userCredential.user!));
+      // } else {
+      //   emit(const AuthError("Social login failed."));
+      // }
+      emit(const AuthError("Social login not implemented yet.")); // Placeholder
     } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
-  }
-
-  Future<void> _onProvinceSelected(
-    ProvinceSelected event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      if (state is ProvinceSelectionRequired) {
-        final currentState = state as ProvinceSelectionRequired;
-        await authRepository.setUserProvince(
-          currentState.user.uid!,
-          event.province,
-        );
-        emit(Authenticated(user: currentState.user));
-      }
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
+      emit(AuthError(e.toString()));
     }
   }
 }

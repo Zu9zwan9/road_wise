@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:roadwise/presentation/bloc/auth/auth_bloc.dart';
+
+import 'bloc/auth_bloc.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -37,7 +38,11 @@ class SignInPage extends StatelessWidget {
               children: [
                 const Text(
                   'Sign In',
-                  style: TextStyle(fontSize: 24, color: Colors.yellow, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -45,7 +50,9 @@ class SignInPage extends StatelessWidget {
                     labelText: 'Email',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.5),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -55,7 +62,9 @@ class SignInPage extends StatelessWidget {
                     labelText: 'Password',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.5),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -63,8 +72,13 @@ class SignInPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthSignInEvent());
@@ -74,7 +88,10 @@ class SignInPage extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => context.push('/sign-up'),
-                  child: const Text('Create Account', style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'Create Account',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

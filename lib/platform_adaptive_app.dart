@@ -2,10 +2,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:road_wise/navigation/app_routes.dart';
 import 'package:road_wise/bloc/premium_bloc.dart';
 
+// Import the auth bloc directly
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/province_bloc.dart';
+// Import screens
+import 'features/auth/presentation/screens/forgot_password_screen.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/screens/province_selection_screen.dart';
+import 'features/auth/presentation/screens/register_screen.dart';
+import 'features/core/presentation/theme/app_theme.dart';
+import 'features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'features/lessons/presentation/bloc/learning_module_bloc.dart';
+import 'features/profile/presentation/bloc/gamification_bloc.dart';
+import 'features/profile/presentation/bloc/user_progress_bloc.dart';
+import 'features/quiz/presentation/bloc/quiz_bloc.dart';
+import 'features/quiz/presentation/screens/quiz_results_screen.dart';
+import 'features/quiz/presentation/screens/quiz_screen.dart';
+
+// Routes constants
+class AppRoutes {
+  static const String dashboard = '/dashboard';
+  static const String provinceSelection = '/province-selection';
+  static const String login = '/login';
+  static const String register = '/register';
+  static const String forgotPassword = '/forgot-password';
+  static const String quiz = '/quiz';
+  static const String quizResults = '/quiz-results';
+}
 
 class PlatformAdaptiveApp extends StatelessWidget {
   const PlatformAdaptiveApp({super.key});
@@ -17,9 +42,8 @@ class PlatformAdaptiveApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<auth_bloc.AuthBloc>(
-          create: (context) =>
-              auth_bloc.AuthBloc()..add(auth_bloc.AuthCheckRequested()),
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc()..add(const AuthCheckRequested()),
         ),
         BlocProvider<ProvinceBloc>(create: (context) => ProvinceBloc()),
         BlocProvider<LearningModuleBloc>(
@@ -45,16 +69,15 @@ class PlatformAdaptiveApp extends StatelessWidget {
           primaryColor: Color(0xFF2C3E50), // AppColors.nearBlack
         ),
       ),
-      home: BlocBuilder<auth_bloc.AuthBloc, auth_bloc.AuthState>(
+      home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is auth_bloc.AuthInitial ||
-              state is auth_bloc.AuthLoading) {
+          if (state is AuthInitial || state is AuthLoading) {
             return const CupertinoPageScaffold(
               child: Center(child: CupertinoActivityIndicator()),
             );
-          } else if (state is auth_bloc.Authenticated) {
+          } else if (state is Authenticated) {
             return const DashboardScreen();
-          } else if (state is auth_bloc.ProvinceSelectionRequired) {
+          } else if (state is ProvinceSelectionRequired) {
             return const ProvinceSelectionScreen();
           } else {
             // AuthenticationRequired or other states
@@ -88,11 +111,10 @@ class PlatformAdaptiveApp extends StatelessWidget {
             return CupertinoPageRoute(
               builder: (_) => QuizResultsScreen(
                 quizId: args['quizId'] as String,
-                score: args['score'] as double,
-                correctAnswers: args['correctAnswers'] as int,
+                score: args['score'] as int,
                 totalQuestions: args['totalQuestions'] as int,
-                isPassed: args['isPassed'] as bool,
-                earnedXp: args['earnedXp'] as int,
+                answers: args['answers'] as List<String>,
+                correctAnswers: args['correctAnswers'] as int, // Provide this
               ),
             );
           default:
@@ -112,16 +134,15 @@ class PlatformAdaptiveApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: BlocBuilder<auth_bloc.AuthBloc, auth_bloc.AuthState>(
+      home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is auth_bloc.AuthInitial ||
-              state is auth_bloc.AuthLoading) {
+          if (state is AuthInitial || state is AuthLoading) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
-          } else if (state is auth_bloc.Authenticated) {
+          } else if (state is Authenticated) {
             return const DashboardScreen();
-          } else if (state is auth_bloc.ProvinceSelectionRequired) {
+          } else if (state is ProvinceSelectionRequired) {
             return const ProvinceSelectionScreen();
           } else {
             // AuthenticationRequired or other states
@@ -155,11 +176,10 @@ class PlatformAdaptiveApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (_) => QuizResultsScreen(
                 quizId: args['quizId'] as String,
-                score: args['score'] as double,
-                correctAnswers: args['correctAnswers'] as int,
+                score: args['score'] as int,
                 totalQuestions: args['totalQuestions'] as int,
-                isPassed: args['isPassed'] as bool,
-                earnedXp: args['earnedXp'] as int,
+                answers: args['answers'] as List<String>,
+                correctAnswers: args['correctAnswers'] as int, // Provide this
               ),
             );
           default:

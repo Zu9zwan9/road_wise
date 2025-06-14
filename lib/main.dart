@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:road_wise/platform_adaptive_app.dart';
+import 'package:road_wise/services/isar_service.dart';
 
-void main() {
+void main() async {
+  await _setupDB();
   // Set up error handling for production
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
@@ -18,4 +20,8 @@ void main() {
 
   // Run the platform-adaptive app
   runApp(const PlatformAdaptiveApp());
+}
+
+Future<void> _setupDB() async {
+  await IsarService.openDatabase();
 }
