@@ -2,24 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:road_wise/features/authentication/presentation/bloc/auth_bloc.dart'
-    as auth_bloc;
-import 'package:road_wise/features/authentication/presentation/screens/login_screen.dart';
-import 'package:road_wise/features/authentication/presentation/screens/province_selection_screen.dart';
-import 'package:road_wise/features/core/theme/app_theme.dart';
-import 'package:road_wise/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:road_wise/features/practice_tests/presentation/bloc/quiz_bloc.dart';
-import 'package:road_wise/features/practice_tests/presentation/screens/quiz_results_screen.dart';
-import 'package:road_wise/features/practice_tests/presentation/screens/quiz_screen.dart';
-import 'package:road_wise/features/provincial_content/presentation/bloc/province_bloc.dart';
-import 'package:road_wise/features/user_profile/presentation/bloc/user_progress_bloc.dart';
-import 'package:road_wise/navigation/app_routes.dart';
-import 'package:road_wise/premium_bloc.dart';
 
-import 'features/authentication/presentation/screens/forgot_password_screen.dart';
-import 'features/authentication/presentation/screens/register_screen.dart';
-import 'features/dashboard/learning_modules/presentation/bloc/learning_module_bloc.dart';
-import 'gamification_bloc.dart';
+import 'package:road_wise/navigation/app_routes.dart';
+import 'package:road_wise/bloc/premium_bloc.dart';
+
 
 class PlatformAdaptiveApp extends StatelessWidget {
   const PlatformAdaptiveApp({super.key});
